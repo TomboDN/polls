@@ -33,6 +33,11 @@ public class Vote implements Serializable {
     @ToString.Exclude
     private User user;
 
+    public Vote(Poll poll, User user) {
+        this.poll = poll;
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -14,7 +14,7 @@ public class AuthController {
     private final UserService userService;
     @GetMapping("/")
     public String getHomePage(){
-        return "polls-list";
+        return "index";
     }
 
     @GetMapping("/signup")

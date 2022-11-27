@@ -9,6 +9,11 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +40,11 @@ public class Poll implements Serializable {
     @Fetch(FetchMode.SELECT)
     @BatchSize(size = 30)
     private List<Option> options = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "creator_user_id")
+    private User creator;
+    @Column(name = "creation_date_time")
+    private Instant creationDateTime;
 
     @Override
     public boolean equals(Object o) {
@@ -47,5 +57,10 @@ public class Poll implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public String creationDateTimeString(){
+        LocalDateTime datetime = LocalDateTime.ofInstant(creationDateTime, ZoneId.systemDefault());
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(datetime);
     }
 }

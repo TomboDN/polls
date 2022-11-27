@@ -24,6 +24,7 @@ public class Option implements Serializable {
     @JoinColumn(name = "poll_id", nullable = false)
     @ToString.Exclude
     private Poll poll;
+    private Long votes;
 
     @Override
     public boolean equals(Object o) {
@@ -36,5 +37,9 @@ public class Option implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public void incrementVotes(){
+        votes++;
     }
 }

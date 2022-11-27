@@ -5,6 +5,7 @@ import com.tombo.polls.model.User;
 import com.tombo.polls.repository.RoleRepository;
 import com.tombo.polls.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,5 +29,9 @@ public class UserService {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             userRepository.save(user);
         }
+    }
+    public User findUserByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.orElseThrow(() -> new UsernameNotFoundException("Could not find user"));
     }
 }
