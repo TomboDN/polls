@@ -1,0 +1,31 @@
+-- CREATE TABLE users
+-- (
+--     user_id  bigserial primary key,
+--     username varchar(255) NOT NULL,
+--     password varchar(255) NOT NULL
+-- );
+-- CREATE TABLE roles
+-- (
+--     role_id bigserial primary key,
+--     name    varchar(255) not null
+-- );
+-- CREATE TABLE users_roles
+-- (
+--     user_id bigint REFERENCES users (user_id),
+--     role_id bigint REFERENCES roles (role_id)
+-- );
+-- INSERT INTO roles (name)
+-- VALUES ('ROLE_USER'),
+--        ('ROLE_ADMIN');
+
+-- CREATE TABLE options(
+--     id bigserial primary key ,
+--     value varchar(255) NOT NULL,
+--     poll_id bigint REFERENCES polls (id)
+-- );
+--
+-- CREATE TABLE polls(
+--     id bigserial primary key ,
+--     question varchar(255) not null ,
+--     option_id bigint REFERENCES
+-- )

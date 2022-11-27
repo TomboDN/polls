@@ -11,8 +11,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-@Getter
-@RequiredArgsConstructor
 public record CustomUserDetails(User user) implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

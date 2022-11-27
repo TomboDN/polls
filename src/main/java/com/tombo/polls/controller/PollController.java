@@ -11,31 +11,31 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
-@Controller("/polls")
+@Controller
 @RequiredArgsConstructor
 public class PollController {
     private final PollService pollService;
 
-    @GetMapping("/create")
+    @GetMapping("/polls/create")
     public String showPollCreationForm(Model model){
         model.addAttribute("poll", new Poll());
         return "poll-create";
     }
 
-    @PostMapping
+    @PostMapping("/polls")
     public String createPoll(@Valid Poll poll) {
         pollService.save(poll);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(poll.getId()).toUri();
         return "redirect:" + uri;
     }
 
-    @GetMapping
+    @GetMapping("/polls")
     public String getAllPolls(Model model) {
         model.addAttribute("polls", pollService.findAll());
         return "polls-list";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/polls/{id}")
     public String getPoll(@PathVariable Long id, Model model) {
         Poll poll = pollService.findById(id);
         if (poll != null) {
@@ -43,13 +43,13 @@ public class PollController {
             return "poll";
         } else return "polls-list";
     }
-    @GetMapping("/{id}/result")
+    @GetMapping("/polls/{id}/result")
     public String getPollResult(@PathVariable Long id, Model model){
         model.addAttribute("poll_result", pollService.findById(id));
         return "poll-result";
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/polls/{id}")
     public String updatePoll(@Valid Poll poll, @PathVariable Long id) {
         if (pollService.findById(id) != null) {
             return "polls-list";
@@ -59,7 +59,7 @@ public class PollController {
         }
     }
 
-    @PostMapping("/delete/{id}")
+    @PostMapping("/polls/delete/{id}")
     public String deletePoll(@PathVariable Long id) {
         pollService.deleteById(id);
         return "polls-list";
