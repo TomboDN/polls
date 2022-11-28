@@ -42,7 +42,7 @@
                             <div th:object="${total_votes}" class="card-body d-flex flex-column justify-content-between p-sm-5"
                                  style="border-top-width: 6px;border-top-color: var(--bs-purple);max-width: 100%;max-height: 100%;">
                                 <form method="get" th:object="${poll}">
-                                    <h4 class="text-start card-title">Вопрос</h4>
+                                    <h4 th:text="${poll.question}" class="text-start card-title">Вопрос</h4>
                                     <div class="d-flex flex-row">
                                         <h6 class="text-start text-muted mb-2" style="margin-right: 5px;">создано</h6>
                                         <h6 class="text-start text-muted mb-2" th:text="${poll.creator.username}"
@@ -52,10 +52,10 @@
                                     </div>
                                     <div th:each="option : ${poll.options}" class="mb-3">
                                         <div class="d-flex flex-row justify-content-between">
-                                            <span th:text="${option.value}">Text</span><span th:text="${option.votes}">Text</span>
+                                            <span th:text="${option.value}">Text</span><span th:text="${option.voted}">Text</span>
                                         </div>
                                         <div>
-                                            <div th:switch="${option.votes}" class="progress"
+                                            <div th:switch="${option.voted}" class="progress"
                                                  style="background: var(--bs-gray-600);--bs-primary: #7f34bb;--bs-primary-rgb: 127,52,187;">
                                                 <div th:case="0" class="progress-bar bg-primary"
                                                      aria-valuenow="0"
@@ -63,16 +63,13 @@
                                                      style="width: 0;">0%
                                                 </div>
                                                 <div th:case="*" class="progress-bar bg-primary"
-                                                     th:attr="aria-valuenow=${#numbers.formatDecimal((option.votes / total_votes)*100, 0, 3)}"
-                                                     th:style="'width:' + ${#numbers.formatDecimal((option.votes / total_votes)*100, 0, 3)} + '%;'"
+                                                     th:attr="aria-valuenow=${#numbers.formatDecimal((1.0 * option.voted / total_votes)*100, 0, 3)}"
+                                                     th:style="'width:' + ${#numbers.formatDecimal((1.0 * option.voted / total_votes)*100, 0, 3)} + '%;'"
                                                      aria-valuemin="0" aria-valuemax="100"
-                                                     th:text="${#numbers.formatDecimal((option.votes / total_votes)*100, 0, 3)} + '%'"
+                                                     th:text="${#numbers.formatDecimal((1.0 * option.voted / total_votes)*100, 0, 2)} + '%'"
                                                      >100%
                                                 </div>
                                             </div>
-                                            <span th:text="${option.votes}"></span>
-                                            <span th:text="${total_votes}"></span>
-                                            <span th:text="${#numbers.formatDecimal((option.votes / total_votes)*100, 0, 3)}"></span>
                                         </div>
                                     </div>
                                     <hr>
@@ -89,7 +86,7 @@
                                            style="background: var(--bs-body-bg);border-style: none;"
                                            th:href="@{/polls/__${poll.id}__}">Назад
                                             к опросу</a><a class="btn btn-danger d-flex align-items-center"
-                                                           role="button" th:href="@{/polls/__${poll.id}__/delete}">Удалить</a>
+                                                           role="button" th:href="@{/polls/delete/__${poll.id}__}">Удалить</a>
                                     </div>
                                 </form>
                             </div>

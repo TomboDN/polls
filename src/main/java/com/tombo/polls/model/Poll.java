@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,6 @@ public class Poll implements Serializable {
     @Column(name = "question", nullable = false)
     private String question;
     @OneToMany(
-            mappedBy = "poll",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER,
             orphanRemoval = true
@@ -45,6 +43,15 @@ public class Poll implements Serializable {
     private User creator;
     @Column(name = "creation_date_time")
     private Instant creationDateTime;
+    @Column(name = "multiple_choice")
+    private boolean multipleChoice;
+    @Column(name = "multiple_attempts")
+    private boolean multipleAttempts;
+
+    {
+        options.add(new Option());
+        options.add(new Option());
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -59,8 +66,8 @@ public class Poll implements Serializable {
         return getClass().hashCode();
     }
 
-    public String creationDateTimeString(){
+    public String creationDateTimeString() {
         LocalDateTime datetime = LocalDateTime.ofInstant(creationDateTime, ZoneId.systemDefault());
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(datetime);
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(datetime);
     }
 }

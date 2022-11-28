@@ -45,9 +45,9 @@ public class WebSecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/", "/signup", "/polls", "/login", "/assets/**").permitAll()
                         .anyRequest().authenticated())
-                .formLogin((form) -> form.defaultSuccessUrl("/")
+                .formLogin((form) -> form
                         .loginPage("/login")
-                        .permitAll())
+                        .permitAll().defaultSuccessUrl("/", true))
                 .logout(LogoutConfigurer::permitAll);
 
         return http.build();

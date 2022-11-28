@@ -7,10 +7,12 @@ import com.tombo.polls.service.OptionService;
 import com.tombo.polls.service.PollService;
 import com.tombo.polls.service.UserService;
 import com.tombo.polls.service.VoteService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,13 +33,27 @@ public class PollController {
         model.addAttribute("poll", new Poll());
         return "poll-create";
     }
+    @RequestMapping(value = "/polls", params = {"addOption"})
+    public String addOption(final Poll poll, final BindingResult bindingResult){
+        poll.getOptions().add(new Option());
+        return "poll-create";
+    }
+    @RequestMapping(value = "/polls", params = {"removeOption"})
+    public String removeOption(final Poll poll, final BindingResult bindingResult, final HttpServletRequest request){
+        final long optionId = Long.parseLong(request.getParameter("removeOption"));
+        poll.getOptions().remove((int) optionId);
+        return "poll-create";
+    }
 
-    @PostMapping("/polls")
-    public String createPoll(@Valid Poll poll, Principal principal) {
+    @RequestMapping(value = "/polls", params = {"save"})
+    public String createPoll(final @Valid Poll poll, final BindingResult bindingResult, Principal principal) {
+        if (bindingResult.hasErrors()){
+            return "redirect:/polls/create";
+        }
         poll.setCreationDateTime(Instant.now());
         for (Option option : poll.getOptions()) {
             option.setPoll(poll);
-            option.setVotes(0L);
+            option.setVoted(0L);
         }
         poll.setCreator(userService.findUserByUsername(principal.getName()));
         pollService.save(poll);
@@ -52,10 +68,14 @@ public class PollController {
     }
 
     @GetMapping("/polls/{id}")
-    public String getPoll(@PathVariable Long id, Model model, Principal principal) {
+    public String getPollToVote(@PathVariable Long id, Model model, Principal principal) {
         Poll poll = pollService.findById(id);
         if (poll != null) {
-            model.addAttribute("poll", pollService.findById(id));
+            if (poll.isMultipleAttempts()){
+            } else if (voteService.existsByUser(userService.findUserByUsername(principal.getName()))) {
+                return "redirect:/polls/" + id + "/result";
+            }
+            model.addAttribute("poll", poll);
             model.addAttribute("vote", new Vote(poll, userService.findUserByUsername(principal.getName())));
             return "poll";
         } else return "polls-list";
@@ -80,19 +100,9 @@ public class PollController {
         return "poll-result";
     }
 
-    @PostMapping("/polls/{id}")
-    public String updatePoll(@Valid Poll poll, @PathVariable Long id) {
-        if (pollService.findById(id) != null) {
-            return "polls-list";
-        } else {
-            pollService.save(poll);
-            return "redirect:" + ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
-        }
-    }
-
-    @PostMapping("/polls/delete/{id}")
+    @GetMapping("/polls/delete/{id}")
     public String deletePoll(@PathVariable Long id) {
         pollService.deleteById(id);
-        return "polls-list";
+        return "index";
     }
 }

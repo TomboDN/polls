@@ -1,5 +1,6 @@
 package com.tombo.polls.service;
 
+import com.tombo.polls.model.User;
 import com.tombo.polls.model.Vote;
 import com.tombo.polls.repository.VoteRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,5 +16,9 @@ public class VoteService {
 
     public void save(Vote vote) {
         voteRepository.save(vote);
+    }
+
+    public boolean existsByUser(User user) {
+        return voteRepository.existsByUser(user);
     }
 }

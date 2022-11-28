@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -20,11 +22,11 @@ public class Option implements Serializable {
 
     @Column(nullable = false)
     private String value;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "poll_id", nullable = false)
     @ToString.Exclude
     private Poll poll;
-    private Long votes;
+    private Long voted;
 
     @Override
     public boolean equals(Object o) {
@@ -40,6 +42,6 @@ public class Option implements Serializable {
     }
 
     public void incrementVotes(){
-        votes++;
+        voted++;
     }
 }

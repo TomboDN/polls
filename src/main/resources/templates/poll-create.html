@@ -40,35 +40,48 @@
                         <div class="card mb-5" style="background: var(--bs-gray-800);">
                             <div class="card-body p-sm-5">
                                 <h2 class="text-center mb-4">Создание опроса</h2>
-                                <form method="post" th:action="@{/polls}" th:object="${poll}">
+                                <form action="#" method="post" th:action="@{/polls}" th:object="${poll}">
                                     <div class="mb-3"><span>Заголовок</span><input class="form-control" type="text"
                                                                                    id="name-2" name="question"
                                                                                    placeholder="Вопрос"
                                                                                    th:field="${poll.question}"></div>
-                                    <div th:fragment="options"
-                                         class="d-flex flex-column flex-grow-1 justify-content-between flex-wrap mb-3">
-                                        <span>Варианты ответа</span><input class="form-control" type="text" id="name-1"
-                                                                           name="option-1" placeholder="Вариант 1"
-                                                                           style="margin-bottom: 10px;"
-                                                                           th:field="${poll.options[0].value}"><input
-                                            class="form-control" type="text" id="name-3" name="option-2"
-                                            placeholder="Вариант 2" style="margin-bottom: 10px;"
-                                            th:field="${poll.options[1].value}">
-                                        <div class="input-group"><input class="form-control" type="text"
-                                                                        placeholder="Вариант 3" name="option-3"
-                                                                        th:field="${poll.options[2].value}">
-                                            <button class="btn btn-outline-primary btn-sm" type="button"
-                                                    style="color: var(--bs-black);background: var(--bs-btn-border-color);">
-                                                X
-                                            </button>
+                                    <div
+                                            class="d-flex flex-column flex-grow-1 justify-content-between flex-wrap mb-3">
+                                        <span>Варианты ответа</span>
+                                        <div th:each="option, optionStat : ${poll.options}">
+                                            <div class="input-group" style="margin-bottom: 10px;"><input
+                                                    class="form-control" type="text"
+                                                    th:field="${poll.options[__${optionStat.index}__].value}">
+                                                <button th:if="${optionStat.index} gt 1" th:value="${optionStat.index}"
+                                                        name="removeOption"
+                                                        class="btn btn-outline-primary btn-sm" type="submit"
+                                                        style="color: var(--bs-black);background: var(--bs-btn-border-color);">
+                                                    X
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <button class="btn btn-primary" type="button">Добавить вариант</button>
+                                        <button name="addOption" class="btn btn-primary" type="submit">
+                                            Добавить вариант
+                                        </button>
                                     </div>
                                     <hr>
+                                    <span>Настройки</span>
+                                    <div style="margin-bottom: 10px;"><span>Сколько вариантов за ответ</span><select
+                                            th:field="${poll.multipleChoice}" class="form-select">
+                                        <option th:value="false" selected="">Один вариант</option>
+                                        <option th:value="true">Несколько вариантов</option>
+                                    </select></div>
+                                    <div><span>Повторные ответы от пользователей</span><select
+                                            th:field="${poll.multipleAttempts}" class="form-select">
+                                        <option th:value="false" selected="">Один ответ</option>
+                                        <option th:value="true">Несколько ответов</option>
+                                    </select></div>
+                                    <hr>
                                     <div>
-                                        <button class="btn btn-primary d-block w-100" type="submit">Создать опрос
+                                        <button name="save" class="btn btn-primary d-block w-100" type="submit">Создать
+                                            опрос
                                         </button>
                                     </div>
                                 </form>
