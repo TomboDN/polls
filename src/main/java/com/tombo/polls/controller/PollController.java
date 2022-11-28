@@ -52,7 +52,7 @@ public class PollController {
         }
         poll.setCreationDateTime(Instant.now());
         for (Option option : poll.getOptions()) {
-            option.setPoll(poll);
+//            option.setPoll(poll);
             option.setVoted(0L);
         }
         poll.setCreator(userService.findUserByUsername(principal.getName()));
@@ -86,9 +86,12 @@ public class PollController {
         vote.setPoll(pollService.findById(id));
         vote.setUser(userService.findUserByUsername(principal.getName()));
         voteService.save(vote);
-        Option option = vote.getOption();
-        option.incrementVotes();
-        optionService.save(option);
+        for (Option option : vote.getOptions()) {
+            if (option != null){
+                option.incrementVotes();
+                optionService.save(option);
+            }
+        }
         return "redirect:/polls/" + id.toString();
     }
 

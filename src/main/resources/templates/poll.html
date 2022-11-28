@@ -61,15 +61,15 @@
                                              class="d-flex flex-column flex-grow-1 justify-content-between flex-wrap mb-3">
                                             <div th:if="${poll.multipleChoice} eq true" th:each="option, optionStat : ${poll.options}" class="form-check"><input
                                                     class="form-check-input" type="checkbox" name="choice"
-                                                    th:field="${vote.option}"
+                                                    th:field="${vote.options[__${optionStat.index}__]}"
                                                     th:value="${option.id}"
                                             ><label
                                                     class="form-check-label"
                                                     th:text="${option.value}">Вариант 1</label>
                                             </div>
-                                            <div th:if="${poll.multipleChoice} eq false" th:each="option : ${poll.options}" class="form-check"><input
+                                            <div th:if="${poll.multipleChoice} eq false" th:each="option, optionStat : ${poll.options}" class="form-check"><input
                                                     class="form-check-input" type="radio" name="choice"
-                                                    th:field="${vote.option}"
+                                                    th:field="${vote.options[0]}"
                                                     th:value="${option.id}"
                                             ><label
                                                     class="form-check-label"

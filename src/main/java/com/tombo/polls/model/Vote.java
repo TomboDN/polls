@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,10 +24,9 @@ public class Vote implements Serializable {
     @ToString.Exclude
     private Poll poll;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "option_id", nullable = false)
+    @OneToMany(fetch = FetchType.EAGER)
     @ToString.Exclude
-    private Option option;
+    private List<Option> options;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)

@@ -22,10 +22,6 @@ public class Option implements Serializable {
 
     @Column(nullable = false)
     private String value;
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "poll_id", nullable = false)
-    @ToString.Exclude
-    private Poll poll;
     private Long voted;
 
     @Override

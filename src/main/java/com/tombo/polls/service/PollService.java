@@ -2,6 +2,7 @@ package com.tombo.polls.service;
 
 import com.tombo.polls.model.Option;
 import com.tombo.polls.model.Poll;
+import com.tombo.polls.repository.OptionRepository;
 import com.tombo.polls.repository.PollRepository;
 import com.tombo.polls.repository.VoteRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,10 @@ public class PollService {
     public void deleteById(Long id) {
         Poll poll = findById(id);
         if (voteRepository.existsByPoll(poll)){
-            voteRepository.deleteAllByPoll(findById(id));
-        } else pollRepository.deleteById(id);
+            voteRepository.deleteAllByPoll(poll);
+        } else {
+            pollRepository.deleteById(id);
+        }
     }
 
     public long countVotes(Poll poll){
